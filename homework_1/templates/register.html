@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>註冊 - 測試用Moodle系統</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        body {
+            min-height: 100vh; /* 保證頁面至少填滿視口高度 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: auto; /* 允許滾動 */
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            gap: 10px;
+            margin: 0 auto; /* 確保內容水平居中 */
+        }
+        input, button, select {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4566a0;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #365899;
+        }
+        label {
+            text-align: left;
+        }
+        #error-message {
+            color: red;
+        }
+        .small-text {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>註冊</h1>
+    <form method="post" id="registration-form" action="/register">
+        <!-- 表單字段 -->
+        <label for="name">姓名:</label>
+        <input type="text" id="name" name="name" required>
+        <label for="username">帳號:</label>
+        <input type="text" id="username" name="username" required>
+        <label for="email">電子郵件:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="password">密碼:</label>
+        <input type="password" id="password" name="password" required>
+        <label for="confirm_password">確認密碼:</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+        <label for="gender">性別:</label>
+        <select id="gender" name="gender" required>
+            <option value="male">男</option>
+            <option value="female">女</option>
+            <option value="other">其他</option>
+        </select>
+        <label for="birth_year">出生年:</label>
+        <input type="number" id="birth_year" name="birth_year" min="1900" max="{{ current_year }}" required>
+        <label for="education">教育階段:</label>
+        <select id="education" name="education" required>
+            <option value="UG">大學生</option>
+            <option value="MS">碩士生</option>
+        </select>
+        <label for="expert">您的專長為？</label>
+        <select id="expert" name="expert" required>
+            <option value="science">理/科學</option>
+            <option value="engineering">工程</option>
+            <option value="technology">科技/技術</option>
+            <option value="design">設計</option>
+            <option value="business">商管</option>
+            <option value="social_sciences">社會科學(含教育)</option>
+            <option value="humanities">人文藝術(含語文)</option>
+            <option value="other">其他</option>
+        </select>
+        <!-- 確認服務條款和隱私政策 -->
+        <label>
+            <input type="checkbox" id="terms" name="terms" required>
+            我同意<a href="#">服務條款</a>和<a href="#">隱私政策</a>
+        </label>
+        <button type="submit">註冊</button>
+    </form>
+    <div id="error-message"></div>
+    <p><a href="{{ url_for('login') }}">已經註冊？點我跳轉登入頁</a></p>
+
+    <script>
+        document.getElementById('registration-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent immediate form submission
+
+            var form = event.target;
+            var username = document.getElementById('username').value;
+
+            // Password matching check
+            var password = document.getElementById('password').value;
+            var confirmPassword = document.getElementById('confirm_password').value;
+            if (password !== confirmPassword) {
+                document.getElementById('error-message').innerText = '密碼與確認密碼不匹配。';
+                return;
+            }
+
+            // Check if username exists
+            fetch('/check-username', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ username: username }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    document.getElementById('error-message').innerText = '帳號已存在，如需註銷、請聯絡該網站管理員。';
+                    
+                    // 等候五秒、避免眼瞎
+                    setTimeout(function() {
+                        window.location.href = "{{ url_for('login') }}";
+                    }, 5000);
+                } else {
+                    document.getElementById('error-message').innerText = '註冊成功！請等候跳轉...';
+
+                    // 註冊訊息於等待後輸出
+                    setTimeout(function() {
+                        form.submit();
+                    }, 5000); // 等候五秒
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('error-message').innerText = '檢查帳號是否存在時出錯。';
+                
+                // Delay 5 seconds before redirecting
+                setTimeout(function() {
+                    window.location.href = "{{ url_for('login') }}";
+                }, 5000);
+            });
+        });
+    </script>
+</body>
+</html>

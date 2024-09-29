@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>測試用Moodle系統</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-image: url('https://i.pinimg.com/originals/c6/c1/1d/c6c11d8ba0b9f26caf0a6a8ee3a3e78e.gif');
+            background-color: rgba(0, 0, 0, 0.2); 
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); 
+            z-index: -1;
+        }
+
+        .top-header {
+            width: 100%;
+            background-color: rgba(86, 99, 248, 0.8); 
+            color: white;
+            text-align: right;
+            padding: 15px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+        }
+
+        h1 {
+            color: white;
+            font-size: 3.5em;
+            margin-top: 50px; 
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .button {
+            padding: 15px 30px;
+            font-size: 23px;
+            color: white;
+            border: 2px solid white;
+            background-color: transparent; 
+            border-radius: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease; 
+        }
+
+        .button:hover {
+            background-color:  transparent; 
+            color: #041048; 
+            border-color: white; 
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #aaa;
+            background-color: rgba(255, 255, 255, 0.1); 
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-header">Moodle system for testing（MS-T）</div>
+
+    <h1>測試用Moodle系統</h1>
+    <div class="button-container">
+        <a href="{{ url_for('login') }}" class="button login-button"><strong>登入</strong></a>
+        <a href="{{ url_for('register') }}" class="button register-button"><strong>註冊</strong></a>
+    </div>
+
+    <footer>
+        <p>該網站的UI我搞了很久，其他同學參考功能性Code可以、請別整個拿去用……
+        </p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入 - 測試用Moodle系統</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        body {
+            min-height: 100vh; /* 保證頁面至少填滿視口高度 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: auto; /* 允許滾動 */
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            gap: 10px;
+            margin: 0 auto; /* 確保內容水平居中 */
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #9738c7;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ae8ac0;
+        }
+        label {
+            text-align: left;
+        }
+        #error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+        .small-text {
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>登入</h1>
+    <form id="login-form" method="post">
+        <label for="username">帳號:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
+        <label for="password">密碼:</label>
+        <input type="password" id="password" name="password" required>
+        <br>
+        <label>
+            <input type="checkbox" id="remember_me" name="remember_me">
+            記住我
+        </label>
+        <br>
+        <button type="submit">登入</button>
+        <div id="error-message"></div> <!-- 用於顯示錯誤訊息 -->
+    </form>
+    <p><a href="{{ url_for('register') }}">還未註冊？點我註冊帳號</a></p>
+    <script>
+        // 在頁面加載時顯示錯誤訊息
+        window.onload = function() {
+            const errorMessage = localStorage.getItem('error-message');
+            if (errorMessage) {
+                document.getElementById('error-message').innerText = errorMessage;
+                localStorage.setItem('error-message', ''); // 強制更新cookie清除錯誤訊息
+            }
+        };
+
+        // 在表單提交不成功後顯示錯誤訊息
+        document.getElementById('login-form').addEventListener('submit', function() {
+            // 將錯誤訊息保存在 localStorage
+            localStorage.setItem('error-message', '帳號或密碼錯誤。');
+        });
+    </script>
+</body>
+</html>
